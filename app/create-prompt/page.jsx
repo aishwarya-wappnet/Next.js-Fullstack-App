@@ -12,8 +12,8 @@ const page = () => {
 
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
-      prompt: '',
-      tag: ''
+    prompt: '',
+    tag: ''
   })
 
   const createPrompt = async (e) => {
@@ -21,33 +21,32 @@ const page = () => {
     setSubmitting(true);
 
     try {
-        const response = await fetch('/api/prompt/new', {
-            method: 'POST',
-            body: JSON.stringify({
-                prompt: post.prompt,
-                userId: session?.user.id,
-                tag: post.tag
-            })
+      const response = await fetch('/api/prompt/new', {
+        method: 'POST',
+        body: JSON.stringify({
+          prompt: post.prompt,
+          userId: session?.user.id,
+          tag: post.tag
         })
-        if (response.ok) {
-            router.push('/')
-        }
+      })
+      if (response.ok) {
+        router.push('/')
+      }
     } catch (error) {
-        console.log(error)
+      console.log(error)
     } finally {
-        setSubmitting(false)
+      setSubmitting(false)
     }
   }
 
   return (
-    <div>
-      <Form 
+    <Form
       type="Create"
       post={post}
       setPost={setPost}
+      submitting={submitting}
       handleSubmit={createPrompt}
-      />
-    </div>
+    />
   )
 }
 
