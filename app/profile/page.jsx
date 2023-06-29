@@ -24,8 +24,20 @@ const page = () => {
         router.push(`/update-prompt?id=${post._id}`);
     }
 
-    const handleDelete = () => {
-
+    const handleDelete = async (post) => {
+        const hasConfirmed = confirm('Are you sure you want to delete this ?')
+        if (hasConfirmed) {
+            try {
+                const deletePrompt = await fetch(`/api/prompt/${post._id}`, {
+                    method: 'DELETE'
+                });
+                console.log(deletePrompt)
+                const filteredPosts = myPosts.filter(item => item._id === post._id);
+                setMyPosts(filteredPosts);
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 
     return (
