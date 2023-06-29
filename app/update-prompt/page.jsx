@@ -9,6 +9,7 @@ const page = () => {
 
     const searchParams = useSearchParams();
     const promptId = searchParams.get("id");
+    console.log(promptId);
 
     const router = useRouter();
     const { data: session } = useSession();
@@ -19,16 +20,39 @@ const page = () => {
         const getPromptDetails = async () => {
             const response = await fetch(`/api/prompt/${promptId}`);
             const data = await response.json();
+            console.log(data)
             setPost({
                 prompt: data.prompt,
                 tag: data.tag
             });
-            if (promptId) getPromptDetails();
         }
+        if (promptId) getPromptDetails();
     }, [promptId])
 
-    const updatePrompt = async () => {
-        
+    const updatePrompt = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            if (!promptId) return alert('Missing PrompId!');
+
+                const response = await fetch(`api/prompt/${promptId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        prompt: post.prompt,
+                        tag: post.tag
+                    })
+                });
+
+                if (response.ok) {
+                    router.push("/")
+                }
+            }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            setSubmitting(false);
+        }
     }
 
     return (
